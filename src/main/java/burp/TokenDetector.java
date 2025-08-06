@@ -3,11 +3,9 @@ package burp;
 import burp.api.montoya.core.Annotations;
 import burp.api.montoya.core.HighlightColor;
 import burp.api.montoya.http.message.HttpHeader;
-import burp.api.montoya.http.message.HttpRequestResponse;
-import burp.api.montoya.http.message.requests.HttpRequest;
-import burp.api.montoya.proxy.http.ProxyRequestReceivedAction;
 
-import java.net.http.HttpResponse;
+import burp.api.montoya.http.message.requests.HttpRequest;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,20 +20,17 @@ public class TokenDetector {
     );
 
     public static Annotations detect(HttpRequest request){
-        Annotations annotations = null;
         if(detectPaseto(request)){
-            annotations = Annotations.annotations(null, HighlightColor.GREEN);
-            return annotations;
+
+            return Annotations.annotations(null, HighlightColor.GREEN);
         }
         if(detectLtpa2(request)){
-            annotations = Annotations.annotations(null, HighlightColor.RED);
-            return annotations;
+            return Annotations.annotations(null, HighlightColor.RED);
         }
         if(detectJWT(request)){
-            annotations = Annotations.annotations(null, HighlightColor.ORANGE);
-            return annotations;
+            return Annotations.annotations(null, HighlightColor.ORANGE);
         }
-        return annotations;
+        return null;
     }
 
 
@@ -59,7 +54,7 @@ public class TokenDetector {
     }
 
     private static boolean detectJWT(HttpRequest request){
-        boolean found=false;
+
         for (HttpHeader header : request.headers()) {
             if (header.name().equalsIgnoreCase("Authorization")) {
                 String value = header.value();
