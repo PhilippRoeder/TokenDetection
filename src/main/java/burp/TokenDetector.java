@@ -1,73 +1,54 @@
 package burp;
 
 import burp.api.montoya.core.Annotations;
-import burp.api.montoya.core.HighlightColor;
 import burp.api.montoya.http.message.HttpHeader;
-
 import burp.api.montoya.http.message.requests.HttpRequest;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TokenDetector {
 
-    private static final Pattern PASETO_PATTERN =
-            Pattern.compile("v[0-9]\\.(local|public)\\.[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)?");
-    private static final Pattern LTPA2_PATTERN =
-            Pattern.compile("(?i)LtpaToken2=");
-    private static final Pattern JWT_PATTERN = Pattern.compile(
-            "eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+"
-    );
+    /**
+     * Returns the first matching annotation for enabled rules (settings-driven).
+     * Search order:
+     *   1) All headers (values)
+     *   2) Body
+     * If no rule matches, returns null.
+     */
+    public static Annotations detect(HttpRequest request) {
+        List<EditorTab.Rule> enabled = TokenSettings.loadEnabled();
+        if (enabled.isEmpty()) return null;
 
-    public static Annotations detect(HttpRequest request){
-        if(detectPaseto(request)){
+        // Cache body once (may be large)
+        String body = request.bodyToString();
 
-            return Annotations.annotations(null, HighlightColor.GREEN);
-        }
-        if(detectLtpa2(request)){
-            return Annotations.annotations(null, HighlightColor.RED);
-        }
-        if(detectJWT(request)){
-            return Annotations.annotations(null, HighlightColor.ORANGE);
-        }
-        return null;
-    }
-
-
-    private static boolean detectPaseto (HttpRequest request){
-        // 1) Headers (e.g. Authorization: Bearer <token>)
-        for (HttpHeader header : request.headers()) {
-            Matcher m = PASETO_PATTERN.matcher(header.value());
-            if (m.find()) {
-                return true;
+        for (EditorTab.Rule rule : enabled) {
+            // Compile per-rule; validation already happens on save, so exceptions are unlikely
+            Pattern p;
+            try {
+                p = Pattern.compile(rule.regex);
+            } catch (Exception ex) {
+                continue; // skip malformed rule just in case
             }
-        }
 
-        // 2) Body (JSON, form‑encoded, etc.)
-        Matcher m = PASETO_PATTERN.matcher(request.bodyToString());
-        return m.find();
-    }
-    private static boolean detectLtpa2 (HttpRequest request){
-        String cookie = request.headerValue("Cookie");
-        Matcher m = LTPA2_PATTERN.matcher(cookie);
-        return m.find();
-    }
+            // 1) Headers
+            for (HttpHeader header : request.headers()) {
+                Matcher mh = p.matcher(header.value());
+                if (mh.find()) {
+                    return Annotations.annotations(null, TokenSettings.toHighlight(rule.colour));
+                }
+            }
 
-    private static boolean detectJWT(HttpRequest request){
-
-        for (HttpHeader header : request.headers()) {
-            if (header.name().equalsIgnoreCase("Authorization")) {
-                String value = header.value();
-                Matcher matcher1 = JWT_PATTERN.matcher(value);
-                if (matcher1.find()) {
-                    return true;
+            // 2) Body
+            if (!body.isEmpty()) {
+                Matcher mb = p.matcher(body);
+                if (mb.find()) {
+                    return Annotations.annotations(null, TokenSettings.toHighlight(rule.colour));
                 }
             }
         }
-
-        String body = request.bodyToString();
-        Matcher matcher2 = JWT_PATTERN.matcher(body);
-        return matcher2.find();
-
+        return null;
     }
 }
