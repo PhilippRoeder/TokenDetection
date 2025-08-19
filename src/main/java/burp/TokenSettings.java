@@ -106,6 +106,14 @@ public final class TokenSettings {
                 "v[0-9]\\.(local|public)\\.[A-Za-z0-9_-]+(?:\\.[A-Za-z0-9_-]+)?"
         ));
 
+        // SAML (SAMLResponse/SAMLRequest param OR inline XML Assertion)
+        list.add(new Rule(
+                true,
+                "SAML token",
+                EditorTab.Colour.MAGENTA,
+                "(?i)(?:\\bSAMLResponse=|\\bSAMLRequest=)[A-Za-z0-9%+/=_.-]{20,}|<\\s*(?:saml:)?Assertion\\b"
+        ));
+
         return list;
     }
 
