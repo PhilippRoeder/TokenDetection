@@ -14,6 +14,7 @@ class RulesTableModel extends AbstractTableModel {
     @Override public int getRowCount() { return rules.size(); }
     @Override public int getColumnCount() { return COLS.length; }
     @Override public String getColumnName(int col) { return COLS[col]; }
+
     @Override public Class<?> getColumnClass(int col) {
         return switch (col) {
             case 0 -> Boolean.class;
@@ -64,10 +65,12 @@ class RulesTableModel extends AbstractTableModel {
         rules.add(r);
         fireTableRowsInserted(idx, idx);
     }
+
     void removeRow(int row) {
         rules.remove(row);
         fireTableRowsDeleted(row, row);
     }
+
     String validateAllRegexes() {
         for (int i = 0; i < rules.size(); i++) {
             try { Pattern.compile(rules.get(i).regex); }

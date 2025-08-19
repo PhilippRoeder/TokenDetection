@@ -28,11 +28,13 @@ class RulesPanel extends JPanel {
         table.setAutoCreateRowSorter(true);
 
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
         buttons.add(new JButton(new AbstractAction("Add") {
             @Override public void actionPerformed(ActionEvent e) {
                 model.addRow(new Rule(true, "New rule", EditorTab.Colour.GRAY, ""));
             }
         }));
+
         buttons.add(new JButton(new AbstractAction("Delete selected") {
             @Override public void actionPerformed(ActionEvent e) {
                 int[] sel = table.getSelectedRows();
@@ -42,13 +44,16 @@ class RulesPanel extends JPanel {
                 }
             }
         }));
+
         buttons.add(new JButton(new AbstractAction("Enable") {
             @Override public void actionPerformed(ActionEvent e) { setSelectedEnabled(true); }
         }));
+
         buttons.add(new JButton(new AbstractAction("Disable") {
             @Override public void actionPerformed(ActionEvent e) { setSelectedEnabled(false); }
         }));
         buttons.add(Box.createHorizontalStrut(16));
+
         buttons.add(new JButton(new AbstractAction("Save") {
             @Override public void actionPerformed(ActionEvent e) {
                 String err = model.validateAllRegexes();
