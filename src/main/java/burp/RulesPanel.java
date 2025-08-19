@@ -17,6 +17,33 @@ class RulesPanel extends JPanel {
         this.onSave = onSave;
         this.model = new RulesTableModel(rules);
         this.table = new JTable(model);
+        // Make first three columns compact; let "Regex pattern" eat remaining space
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
+        // Enabled (checkbox) — very narrow and fixed-ish
+        TableColumn c0 = table.getColumnModel().getColumn(0);
+        c0.setMinWidth(36);
+        c0.setPreferredWidth(40);
+        c0.setMaxWidth(60);
+
+        // Name — small by default, but user can expand if needed
+        TableColumn c1 = table.getColumnModel().getColumn(1);
+        c1.setMinWidth(80);
+        c1.setPreferredWidth(110);
+        // no max width, so the user can grow it
+
+        // Colour — narrow, mostly fixed
+        TableColumn c2 = table.getColumnModel().getColumn(2);
+        c2.setMinWidth(70);
+        c2.setPreferredWidth(90);
+        c2.setMaxWidth(150);
+
+        // Regex pattern — get the rest of the space
+        TableColumn c3 = table.getColumnModel().getColumn(3);
+        c3.setPreferredWidth(800);
+
+        // (Optional) slightly tighter rows
+        table.setRowHeight(22);
 
         TableColumn enabledCol = table.getColumnModel().getColumn(0);
         enabledCol.setCellEditor(new DefaultCellEditor(new JCheckBox()));
