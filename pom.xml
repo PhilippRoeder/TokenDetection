@@ -6,7 +6,7 @@
 
     <groupId>xfr.ibm.com</groupId>
     <artifactId>ToDecahedron</artifactId>
-    <version>0.1.2</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
