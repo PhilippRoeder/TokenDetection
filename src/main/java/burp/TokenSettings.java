@@ -27,7 +27,7 @@ public final class TokenSettings {
     }
 
     /* -------- Load / Save (supports both Optional<String> and String Montoya builds) -------- */
-    public static List<EditorTab.Rule> loadAll() {
+    public static List<Rule> loadAll() {
         ensureInit();
         try {
             // Try call site compiled against String return type:
@@ -40,11 +40,11 @@ public final class TokenSettings {
         }
     }
 
-    public static List<EditorTab.Rule> loadEnabled() {
+    public static List<Rule> loadEnabled() {
         return loadAll().stream().filter(r -> r.enabled).collect(Collectors.toList());
     }
 
-    public static void saveAll(List<EditorTab.Rule> rules) {
+    public static void saveAll(List<Rule> rules) {
         ensureInit();
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(baos)) {
@@ -58,16 +58,16 @@ public final class TokenSettings {
     }
 
     /* -------- Decode helpers (both signatures so either API compiles) -------- */
-    private static List<EditorTab.Rule> loadRules(String encodedStr) {
+    private static List<Rule> loadRules(String encodedStr) {
         return loadRules(Optional.ofNullable(encodedStr));
     }
-    private static List<EditorTab.Rule> loadRules(Optional<String> encodedOpt) {
+    private static List<Rule> loadRules(Optional<String> encodedOpt) {
         if (encodedOpt != null && encodedOpt.isPresent() && !encodedOpt.get().isEmpty()) {
             try {
                 byte[] bytes = Base64.getDecoder().decode(encodedOpt.get());
                 try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes))) {
                     @SuppressWarnings("unchecked")
-                    List<EditorTab.Rule> list = (List<EditorTab.Rule>) ois.readObject();
+                    List<Rule> list = (List<Rule>) ois.readObject();
                     return (list != null && !list.isEmpty()) ? list : defaults();
                 }
             } catch (Exception ignored) {
@@ -79,11 +79,11 @@ public final class TokenSettings {
 
     /* -------- Defaults shown on first run -------- */
 
-    private static List<EditorTab.Rule> defaults() {
-        List<EditorTab.Rule> list = new ArrayList<>();
+    private static List<Rule> defaults() {
+        List<Rule> list = new ArrayList<>();
 
         // LTPA2 cookie (usually Base64-ish, stored in Cookie header)
-        list.add(new EditorTab.Rule(
+        list.add(new Rule(
                 true,
                 "LTPA2 token",
                 EditorTab.Colour.RED,
@@ -91,7 +91,7 @@ public final class TokenSettings {
         ));
 
         // JWT (compact JWS/JWT: header.payload.signature, URL-safe base64url chars)
-        list.add(new EditorTab.Rule(
+        list.add(new Rule(
                 true,
                 "JWT token",
                 EditorTab.Colour.ORANGE,
@@ -99,7 +99,7 @@ public final class TokenSettings {
         ));
 
         // PASETO (vX.local/public.<payload>[.<footer>])
-        list.add(new EditorTab.Rule(
+        list.add(new Rule(
                 true,
                 "PASETO token",
                 EditorTab.Colour.GREEN,

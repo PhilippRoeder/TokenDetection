@@ -18,13 +18,13 @@ public class TokenDetector {
      * If no rule matches, returns null.
      */
     public static Annotations detect(HttpRequest request) {
-        List<EditorTab.Rule> enabled = TokenSettings.loadEnabled();
+        List<Rule> enabled = TokenSettings.loadEnabled();
         if (enabled.isEmpty()) return null;
 
         // Cache body once (may be large)
         String body = request.bodyToString();
 
-        for (EditorTab.Rule rule : enabled) {
+        for (Rule rule : enabled) {
             // Compile per-rule; validation already happens on save, so exceptions are unlikely
             Pattern p;
             try {
