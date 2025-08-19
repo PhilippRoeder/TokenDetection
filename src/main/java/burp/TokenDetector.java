@@ -33,11 +33,12 @@ public class TokenDetector {
                 continue; // skip malformed rule just in case
             }
 
+            final String notes = "Token: " + safe(rule.name) + " | Regex: " + safe(rule.regex);
             // 1) Headers
             for (HttpHeader header : request.headers()) {
                 Matcher mh = p.matcher(header.value());
                 if (mh.find()) {
-                    return Annotations.annotations(null, TokenSettings.toHighlight(rule.colour));
+                    return Annotations.annotations(notes, TokenSettings.toHighlight(rule.colour));
                 }
             }
 
@@ -50,5 +51,9 @@ public class TokenDetector {
             }
         }
         return null;
+    }
+
+    private static String safe(String s) {
+        return (s == null || s.isBlank()) ? "(unknown)" : s;
     }
 }

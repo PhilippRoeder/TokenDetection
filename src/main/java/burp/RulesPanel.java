@@ -35,7 +35,7 @@ class RulesPanel extends JPanel {
             }
         }));
 
-        buttons.add(new JButton(new AbstractAction("Delete selected") {
+        buttons.add(new JButton(new AbstractAction("Remove") {
             @Override public void actionPerformed(ActionEvent e) {
                 int[] sel = table.getSelectedRows();
                 for (int i = sel.length - 1; i >= 0; i--) {
@@ -45,13 +45,6 @@ class RulesPanel extends JPanel {
             }
         }));
 
-        buttons.add(new JButton(new AbstractAction("Enable") {
-            @Override public void actionPerformed(ActionEvent e) { setSelectedEnabled(true); }
-        }));
-
-        buttons.add(new JButton(new AbstractAction("Disable") {
-            @Override public void actionPerformed(ActionEvent e) { setSelectedEnabled(false); }
-        }));
         buttons.add(Box.createHorizontalStrut(16));
 
         buttons.add(new JButton(new AbstractAction("Save") {
@@ -63,8 +56,6 @@ class RulesPanel extends JPanel {
                     return;
                 }
                 onSave.run();
-                JOptionPane.showMessageDialog(RulesPanel.this, "Saved.", "Settings",
-                        JOptionPane.INFORMATION_MESSAGE);
             }
         }));
 
