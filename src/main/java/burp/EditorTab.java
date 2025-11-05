@@ -20,7 +20,7 @@ public class EditorTab implements BurpExtension {
     public void initialize(MontoyaApi api) {
         api.extension().setName("ToDecahedron");
         api.logging().logToOutput("Author: Philipp Röder");
-        api.logging().logToOutput("Version: " + loadVersion());
+        api.logging().logToOutput("Version: " + loadVersion(api));
 
         // NEW: make settings globally available
         TokenSettings.init(api);
