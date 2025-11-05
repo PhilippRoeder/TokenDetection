@@ -7,8 +7,15 @@ import burp.api.montoya.ui.settings.SettingsPanelPersistence;
 import burp.api.montoya.ui.settings.SettingsPanelSetting;
 import burp.api.montoya.ui.settings.SettingsPanelWithData;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.*;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class EditorTab implements BurpExtension {
     private SettingsPanelWithData settings;
