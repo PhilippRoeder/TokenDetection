@@ -19,8 +19,8 @@ public class EditorTab implements BurpExtension {
     @Override
     public void initialize(MontoyaApi api) {
         api.extension().setName("ToDecahedron");
-        api.logging().logToOutput("Author: Philipp Röder");
-        api.logging().logToOutput("Version: " + loadVersion());
+
+        logHeader(api);
 
         // NEW: make settings globally available
         TokenSettings.init(api);
@@ -31,6 +31,17 @@ public class EditorTab implements BurpExtension {
         // Option B: settings panel
         api.userInterface().registerSettingsPanel(new TokenSettingsPanel(api));
     }
+
+    private void logHeader(MontoyaApi api) {
+        api.logging().logToOutput("====================================================");
+        api.logging().logToOutput(" Project Information");
+        api.logging().logToOutput("====================================================");
+        api.logging().logToOutput(" Author       : Philipp Röder");
+        api.logging().logToOutput(" Contributors : Sebastian Vetter, Kartik Rastogi");
+        api.logging().logToOutput(" Version      : " + loadVersion());
+        api.logging().logToOutput("====================================================");
+    }
+
 
     private String loadVersion() {
         try (InputStream input = getClass().getClassLoader().getResourceAsStream("version.properties")) {
