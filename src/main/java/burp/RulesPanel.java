@@ -89,7 +89,7 @@ class RulesPanel extends JPanel {
         add(buttons, BorderLayout.NORTH);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
-        JLabel hint = new JLabel("Double-click cells to edit. Regex is Java Pattern syntax.");
+        JLabel hint = new JLabel("Press Space or Double-click cells to edit. Regex is Java Pattern syntax.");
         hint.setFont(hint.getFont().deriveFont(Font.ITALIC, hint.getFont().getSize() - 1f));
         add(hint, BorderLayout.SOUTH);
     }
