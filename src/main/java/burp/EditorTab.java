@@ -49,8 +49,6 @@ public class EditorTab implements BurpExtension {
         api.logging().logToOutput(" Contributors : Kartik Rastogi");
         api.logging().logToOutput(" Version      : " + loadVersion(api));
         api.logging().logToOutput("====================================================");
-        api.logging().logToOutput(" Further logging below on found token...");
-        api.logging().logToOutput("====================================================");
     }
 
     /* ===== Types moved here so they're available everywhere ===== */
